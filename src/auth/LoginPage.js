@@ -1,10 +1,18 @@
 import React, {Component} from 'react';
 import './Login.css';
+import AuthService from './AuthService';
 
 class LoginPage extends Component {
   constructor() {
     super();
     this.handleChange = this.handleChange.bind(this);
+    this.Auth = new AuthService();
+  }
+
+  componentWillMount() {
+    if(this.Auth.loggedIn()) {
+      this.props.history.replace('/');  //redirect home
+    }
   }
 
   render() {
@@ -27,11 +35,19 @@ class LoginPage extends Component {
               type="password"
               onChange={ this.handleChange }
             />
-            <input
+            { /*<input
               className="form-submit"
               value="SUBMIT"
               type="submit"
-            />
+            />*/ }
+            <button
+              className="form-submit"
+              value="SUBMIT"
+              type="button"
+              onClick={ (e) => this.handleFormSubmit(e) }
+            >
+              Login
+            </button>
           </form>
         </div>
       </div>
@@ -44,6 +60,18 @@ class LoginPage extends Component {
         [e.target.name]: e.target.value
       }
     )
+  }
+
+  handleFormSubmit(e) {
+    e.preventDefault();
+
+    this.Auth.login(this.state.username, this.state.password)
+      .then(res => {
+        this.props.history.replace('/');
+      })
+      .catch(err => {
+        console.error(err);
+      });
   }
 }
 

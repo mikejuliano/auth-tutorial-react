@@ -1,29 +1,19 @@
 import React, {Component} from 'react';
-import {BrowserRouter as Router, Route} from 'react-router-dom';
-import {Column, Container, Row} from './common/ui';
 
 import './App.css';
-import {HomePage} from './home/HomePage';
 import 'foundation-sites/dist/css/foundation.css';
+import withAuth from './auth/withAuth';
+import HomePage from './home/HomePage';
 
 class App extends Component {
   render() {
     return (
       <div className="App">
-        <Container inactive={ true }>
-          <Row>
-            <Column medium={ 12 }>
-              <Router>
-                <div>
-                  <Route path='/' exact={ true } strict={ false } component={ HomePage }/>
-                </div>
-              </Router>
-            </Column>
-          </Row>
-        </Container>
+        <HomePage { ...this.props }/>
       </div>
     );
   }
+
 }
 
-export default App;
+export default withAuth(App);
