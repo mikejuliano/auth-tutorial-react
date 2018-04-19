@@ -5,21 +5,23 @@ export default class AuthService {
     this.isAuthenticated = !!this.getToken();
   }
 
-  login(username, password) {
-    return this.fetch(`/accounts/get_auth_token/`, {
+  authenticate(username, password) {
+    const url = `/accounts/get_auth_token/`;
+    const options = {
       method: 'POST',
       body: JSON.stringify({username, password}),
-      headers: {'Content-Type': 'application/json'}
-    }).then(res => {
-      console.log('res', res);
-      this.setToken(res.token);
-      return res;
-    })
+    };
+    return this.fetch(url, options)
+      .then(res => {
+        const token = res ? res.token : null;
+        this.setToken(token);
+        this.isAuthenticated = !!token;
+        return res;
+      });
   }
 
   setToken(token) {
     localStorage.setItem('id_token', token);
-    this.isAuthenticated = !!token;
   }
 
   getToken() {
@@ -36,13 +38,18 @@ export default class AuthService {
   }
 
   fetch(url, options) {
-    const headers = {'Content-Type': 'application/json'};
-    /*if(this.loggedIn()) {
-      headers['Authorization'] = 'Bearer ' + this.getToken()
-    }*/
-    return fetch(url, {headers, ...options})
+    const headers = this.getHeaders(this.getToken());
+    return fetch(url, {headers, ...options}) // allows for headers override by spreading
       .then(this._checkStatus)
-      .then(response => response.json())
+      .then(response => response.json());
+  }
+
+  getHeaders(token) {
+    const headers = {'Content-Type': 'application/json'};
+    if(this.isAuthenticated) {
+      headers['Authorization'] = `Bearer ${token}`;
+    }
+    return headers;
   }
 
   _checkStatus(response) {

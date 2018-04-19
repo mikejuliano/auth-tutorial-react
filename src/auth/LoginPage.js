@@ -61,7 +61,7 @@ export default class LoginPage extends Component {
   handleFormSubmit(e) {
     e.preventDefault();
 
-    this.authService.login(this.state.username, this.state.password)
+    this.authService.authenticate(this.state.username, this.state.password)
       .then(res => {
         this.goHome();
       })
