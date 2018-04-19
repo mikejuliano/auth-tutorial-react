@@ -9,6 +9,7 @@ import StorageService from './StorageService';
 import {PrivateRoute} from './PrivateRoute';
 import {PublicRoute} from './PublicRoute';
 import {LoadingWrapper} from './LoadingWrapper';
+import {LogoutButton} from './LogoutButton';
 
 export default class App extends Component {
   constructor() {
@@ -50,17 +51,18 @@ export default class App extends Component {
 
   render() {
     return (
-      <LoadingWrapper isLoading={ !this.state.hasLoaded  }>
+      <LoadingWrapper isLoading={ !this.state.hasLoaded }>
         <div className="App">
           <Router>
             <div>
+              <LogoutButton
+                isAuthenticated={ this.state.isAuthenticated }
+                handleLogout={ this.logout.bind(this) }
+              />
               <PrivateRoute
                 path="/" exact={ true } component={ HomePage }
                 isAuthenticated={ this.state.isAuthenticated }
                 user={ this.state.user }
-                handlers={ {
-                  logout: this.logout.bind(this),
-                } }
               />
               <PublicRoute
                 path="/login" exact={ true } component={ LoginPage }
