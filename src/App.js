@@ -7,6 +7,7 @@ import LoginPage from './LoginPage';
 import AuthService from './AuthService';
 import StorageService from './StorageService';
 import {PrivateRoute} from './PrivateRoute';
+import {PublicRoute} from './PublicRoute';
 
 export const Loading = ({}) => <h3>Loading...</h3>;
 
@@ -20,18 +21,18 @@ export default class App extends Component {
 
   init() {
     this.authService.init().then(user => {
-      this.setStateFromUser(user);
+      this.setUser(user);
     });
   }
 
-  setStateFromUser(user, cb) {
+  setUser(user, cb) {
     const isAuthenticated = !!user;
     this.setState({user, isAuthenticated, hasLoaded: true}, cb);
   }
 
-  handleLogout(history) {
+  logout(history) {
     this.authService.logout();
-    this.setStateFromUser(null, () => this.goToLogin(history)); // clear user, set isAuthenticated to false, go to login
+    this.setUser(null, () => this.goToLogin(history)); // clear user, set isAuthenticated to false, go to login
   }
 
   goToLogin(history) {
@@ -40,7 +41,7 @@ export default class App extends Component {
 
   attemptLogin(username, password) {
     return this.authService.authenticate(username, password)
-      .then(user => this.setStateFromUser(user, () => this.goHome())) // set user, set isAuthenticated, go to home page
+      .then(user => this.setUser(user, () => this.goHome())) // set user, set isAuthenticated, go to home page
       .catch(err => console.error(err));
   }
 
@@ -60,21 +61,16 @@ export default class App extends Component {
                 isAuthenticated={ this.state.isAuthenticated }
                 user={ this.state.user }
                 handlers={ {
-                  logout: this.handleLogout.bind(this),
+                  logout: this.logout.bind(this),
                 } }
               />
-              <Route
-                path="/login"
-                exact={ true }
-                render={ (props) => (
-                  <LoginPage
-                    { ...props }
-                    isAuthenticated={ this.state.isAuthenticated }
-                    handlers={ {
-                      attemptLogin: this.attemptLogin.bind(this)
-                    } }
-                  />
-                ) }/>
+              <PublicRoute
+                path="/login" exact={ true } component={ LoginPage }
+                isAuthenticated={ this.state.isAuthenticated }
+                handlers={ {
+                  attemptLogin: this.attemptLogin.bind(this)
+                } }
+              />
             </div>
           </Router>
         </div>
