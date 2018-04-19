@@ -20,9 +20,7 @@ export default class App extends Component {
   }
 
   init() {
-    this.authService.init().then(user => {
-      this.setUser(user);
-    });
+    this.authService.init().then(user => this.setUser(user));
   }
 
   setUser(user, cb) {
@@ -32,7 +30,7 @@ export default class App extends Component {
 
   logout(history) {
     this.authService.logout();
-    this.setUser(null, () => this.goToLogin(history)); // clear user, set isAuthenticated to false, go to login
+    this.setUser(null, () => this.goToLogin(history));
   }
 
   goToLogin(history) {
@@ -41,7 +39,7 @@ export default class App extends Component {
 
   attemptLogin(username, password) {
     return this.authService.authenticate(username, password)
-      .then(user => this.setUser(user, () => this.goHome())) // set user, set isAuthenticated, go to home page
+      .then(user => this.setUser(user, () => this.goHome()))
       .catch(err => console.error(err));
   }
 
@@ -77,4 +75,3 @@ export default class App extends Component {
     )
   }
 }
-
