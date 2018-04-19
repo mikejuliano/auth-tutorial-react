@@ -2,10 +2,11 @@ import React, {Component} from 'react';
 import {BrowserRouter as Router, Route} from "react-router-dom";
 import './App.css';
 
-import HomePage from './home/HomePage';
-import LoginPage from './auth/LoginPage';
-import AuthService from './auth/AuthService';
-import StorageService from './auth/StorageService';
+import HomePage from './HomePage';
+import LoginPage from './LoginPage';
+import AuthService from './AuthService';
+import StorageService from './StorageService';
+import {PrivateRoute} from './PrivateRoute';
 
 export const Loading = ({}) => <h3>Loading...</h3>;
 
@@ -54,31 +55,30 @@ export default class App extends Component {
         <div className="App">
           <Router>
             <div>
-              <Route path="/" exact={ true } render={ (props) => (
-                <HomePage
-                  { ...props }
-                  isAuthenticated={ this.state.isAuthenticated }
-                  user={ this.state.user }
-                  handlers={ {
-                    logout: this.handleLogout.bind(this),
-                    goToLogin: this.goToLogin.bind(this),
-                  } }
-                />
-              ) }/>
-              <Route path="/login" exact={ true } render={ (props) => (
-                <LoginPage
-                  { ...props }
-                  isAuthenticated={ this.state.isAuthenticated }
-                  handlers={ {
-                    attemptLogin: this.attemptLogin.bind(this)
-                  } }
-                />
-              ) }/>
+              <PrivateRoute
+                path="/" exact={ true } component={ HomePage }
+                isAuthenticated={ this.state.isAuthenticated }
+                user={ this.state.user }
+                handlers={ {
+                  logout: this.handleLogout.bind(this),
+                } }
+              />
+              <Route
+                path="/login"
+                exact={ true }
+                render={ (props) => (
+                  <LoginPage
+                    { ...props }
+                    isAuthenticated={ this.state.isAuthenticated }
+                    handlers={ {
+                      attemptLogin: this.attemptLogin.bind(this)
+                    } }
+                  />
+                ) }/>
             </div>
           </Router>
         </div>
       );
   }
-
 }
 
