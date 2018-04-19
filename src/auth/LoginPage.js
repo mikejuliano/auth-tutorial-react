@@ -8,8 +8,8 @@ export default class LoginPage extends Component {
   }
 
   componentWillMount() {
-    this.Auth = this.props.authService;
-    if(this.Auth.isAuthenticated) {
+    this.authService = this.props.authService;
+    if(this.authService.isAuthenticated) {
       this.goHome();
     }
   }
@@ -61,7 +61,7 @@ export default class LoginPage extends Component {
   handleFormSubmit(e) {
     e.preventDefault();
 
-    this.Auth.login(this.state.username, this.state.password)
+    this.authService.login(this.state.username, this.state.password)
       .then(res => {
         this.goHome();
       })
