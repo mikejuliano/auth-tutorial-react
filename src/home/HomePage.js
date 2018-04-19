@@ -8,19 +8,17 @@ export default class HomePage extends Component {
     if(!this.authService.isAuthenticated) {
       return this.goToLogin();
     }
-
+    
     this.user = this.authService.getUser();
   }
 
   shouldComponentUpdate() {
-    console.log('DID UPDATE');
     this.user = this.authService.getUser();
     return true;
   }
 
   componentDidMount() {
-    this.user = this.props.user || this.authService.getUser();
-    console.log('this.user did mount', this.user);
+    this.user = this.authService.getUser();
   }
 
   render() {
