@@ -1,4 +1,5 @@
 import React, {Component} from 'react';
+import {LogoutButton} from '../auth/LogoutButton';
 
 export default class HomePage extends Component {
   componentDidMount() {
@@ -11,18 +12,13 @@ export default class HomePage extends Component {
   }
 
   render() {
-    const logoutButton = <button
-      type="button"
-      className="form-submit"
-      onClick={ () => this.handleLogout(this.props.history) }>Logout
-    </button>;
-
     return (
       <div>
         <h1>Home Page</h1>
-        <p className="App-intro">
-          { this.props.user ? logoutButton : null }
-        </p>
+        <LogoutButton
+          isAuthenticated={ this.props.isAuthenticated }
+          handleLogout={ (history) => this.handleLogout(history) }
+        />
         <p>
           { this.props.user }
         </p>
