@@ -64,7 +64,6 @@ export default class App extends Component {
               />
               <PublicRoute
                 path="/login" exact={ true } component={ LoginPage }
-                isAuthenticated={ this.state.isAuthenticated }
                 handlers={ {
                   attemptLogin: this.attemptLogin.bind(this)
                 } }

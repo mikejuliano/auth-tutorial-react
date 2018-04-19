@@ -4,7 +4,7 @@ import './Login.css';
 export default class LoginPage extends Component {
   constructor(props) {
     super(props);
-    const {handlers, isAuthenticated} = props;
+    const {handlers} = props;
     const {attemptLogin} = handlers;
 
     this.handleChange = this.handleChange.bind(this);
