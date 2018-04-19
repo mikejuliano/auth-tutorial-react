@@ -1,5 +1,5 @@
 import React, {Component} from 'react';
-import {BrowserRouter as Router, Route} from "react-router-dom";
+import {BrowserRouter as Router} from "react-router-dom";
 import './App.css';
 
 import HomePage from './HomePage';
@@ -8,8 +8,7 @@ import AuthService from './AuthService';
 import StorageService from './StorageService';
 import {PrivateRoute} from './PrivateRoute';
 import {PublicRoute} from './PublicRoute';
-
-export const Loading = ({}) => <h3>Loading...</h3>;
+import {LoadingWrapper} from './LoadingWrapper';
 
 export default class App extends Component {
   constructor() {
@@ -50,9 +49,8 @@ export default class App extends Component {
   }
 
   render() {
-    return !this.state.hasLoaded
-      ? <Loading/>  //TODO loadWrapped
-      : (
+    return (
+      <LoadingWrapper isLoading={ !this.state.hasLoaded  }>
         <div className="App">
           <Router>
             <div>
@@ -74,7 +72,8 @@ export default class App extends Component {
             </div>
           </Router>
         </div>
-      );
+      </LoadingWrapper>
+    )
   }
 }
 
