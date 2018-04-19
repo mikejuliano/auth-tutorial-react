@@ -1,25 +1,43 @@
 import React, {Component} from 'react';
-import AuthService from '../auth/AuthService';
 
 export default class HomePage extends Component {
+  constructor(props, context) {
+    super(props, context);
+    this.Auth = this.props.authService;
 
-  constructor() {
-    super();
-    this.Auth = new AuthService();
-    this.profile = this.Auth.getProfile();
+    if(!this.Auth.isAuthenticated) {
+      return this.goToLogin();
+    }
+
+    this.user = this.Auth.getUser();
+  }
+
+  shouldComponentUpdate() {
+    console.log('DID UPDATE');
+    this.user = this.Auth.getUser();
+    return true;
   }
 
   componentDidMount() {
+    this.user = this.props.user || this.Auth.getUser();
+    console.log('this.user did mount', this.user);
   }
 
   render() {
+    const logoutButton = <button
+      type="button"
+      className="form-submit"
+      onClick={ () => this.handleLogout() }>Logout
+    </button>;
+
     return (
       <div>
+        <h1>Home Page</h1>
         <p className="App-intro">
-          <button type="button" className="form-submit" onClick={ this.handleLogout.bind(this) }>Logout</button>
+          { this.user ? logoutButton : null }
         </p>
         <p>
-          { this.profile }
+          { this.user }
         </p>
       </div>
     );
@@ -27,7 +45,11 @@ export default class HomePage extends Component {
 
   handleLogout() {
     this.Auth.logout();
+    this.goToLogin();
+    this.user = null;
+  }
+
+  goToLogin() {
     this.props.history.replace('/login');
   }
 }
-

@@ -1,25 +1,28 @@
 import React, {Component} from 'react';
 import './Login.css';
-import AuthService from './AuthService';
 
-class LoginPage extends Component {
-  constructor() {
-    super();
+export default class LoginPage extends Component {
+  constructor(props, context) {
+    super(props, context);
     this.handleChange = this.handleChange.bind(this);
-    this.Auth = new AuthService();
   }
 
   componentWillMount() {
-    if(this.Auth.loggedIn()) {
-      this.props.history.replace('/');  //redirect home
+    this.Auth = this.props.authService;
+    if(this.Auth.isAuthenticated) {
+      this.goHome();
     }
+  }
+
+  goHome() {
+    this.props.history.replace('/');
   }
 
   render() {
     return (
       <div className="center">
         <div className="card">
-          <h1>Login</h1>
+          <h1>Login Page</h1>
           <form>
             <input
               className="form-item"
@@ -35,18 +38,11 @@ class LoginPage extends Component {
               type="password"
               onChange={ this.handleChange }
             />
-            { /*<input
-              className="form-submit"
-              value="SUBMIT"
-              type="submit"
-            />*/ }
             <button
               className="form-submit"
               value="SUBMIT"
               type="button"
-              onClick={ (e) => this.handleFormSubmit(e) }
-            >
-              Login
+              onClick={ (e) => this.handleFormSubmit(e) }>Login
             </button>
           </form>
         </div>
@@ -67,12 +63,10 @@ class LoginPage extends Component {
 
     this.Auth.login(this.state.username, this.state.password)
       .then(res => {
-        this.props.history.replace('/');
+        this.goHome();
       })
       .catch(err => {
         console.error(err);
       });
   }
 }
-
-export default LoginPage;
