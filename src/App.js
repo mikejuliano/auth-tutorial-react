@@ -30,7 +30,7 @@ export default class App extends Component {
 
   handleLogout(history) {
     this.authService.logout();
-    this.setStateFromUser(null, () => this.goToLogin(history)); // clear user, set isAuth to false, go to login
+    this.setStateFromUser(null, () => this.goToLogin(history)); // clear user, set isAuthenticated to false, go to login
   }
 
   goToLogin(history) {
@@ -39,7 +39,7 @@ export default class App extends Component {
 
   attemptLogin(username, password) {
     return this.authService.authenticate(username, password)
-      .then(user => this.setStateFromUser(user, () => this.goHome())) // set user, set isAuth, go to home page
+      .then(user => this.setStateFromUser(user, () => this.goHome())) // set user, set isAuthenticated, go to home page
       .catch(err => console.error(err));
   }
 
