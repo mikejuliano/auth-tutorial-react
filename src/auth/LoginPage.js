@@ -2,20 +2,22 @@ import React, {Component} from 'react';
 import './Login.css';
 
 export default class LoginPage extends Component {
-  constructor(props, context) {
-    super(props, context);
+  constructor(props) {
+    super(props);
+    const {handlers, isAuthenticated} = props;
+    const {attemptLogin} = handlers;
+
     this.handleChange = this.handleChange.bind(this);
+    this.attemptLogin = attemptLogin.bind(this);
   }
 
-  componentWillMount() {
-    this.authService = this.props.authService;
-    if(this.authService.isAuthenticated) {
-      this.goHome();
-    }
+  handleChange(e) {
+    this.setState({[e.target.name]: e.target.value});
   }
 
-  goHome() {
-    this.props.history.replace('/');
+  submit(e) {
+    e.preventDefault();
+    return this.attemptLogin(this.state.username, this.state.password);
   }
 
   render() {
@@ -42,31 +44,11 @@ export default class LoginPage extends Component {
               className="form-submit"
               value="SUBMIT"
               type="button"
-              onClick={ (e) => this.handleFormSubmit(e) }>Login
+              onClick={ (event) => this.submit(event) }>Login
             </button>
           </form>
         </div>
       </div>
     );
-  }
-
-  handleChange(e) {
-    this.setState(
-      {
-        [e.target.name]: e.target.value
-      }
-    )
-  }
-
-  handleFormSubmit(e) {
-    e.preventDefault();
-
-    this.authService.authenticate(this.state.username, this.state.password)
-      .then(res => {
-        this.goHome();
-      })
-      .catch(err => {
-        console.error(err);
-      });
   }
 }
