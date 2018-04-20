@@ -31,7 +31,7 @@ export default class AuthService {
   }
 
   authenticate(username, password) {
-    const url = `/accounts/get_auth_token/`;
+    const url = `/api-token-auth/`;
     const options = {
       method: 'POST',
       body: JSON.stringify({username, password}),
